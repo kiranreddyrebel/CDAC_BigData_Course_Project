@@ -1,6 +1,8 @@
- Author : U. Kiran vas Reddy
- FB     : https://www.facebook.com/kiranreddyrebel
- Mail   : KiranReddyRebel At Gmail Dot Com
+Author : U. Kiran vas Reddy
+
+FB     : https://www.facebook.com/kiranreddyrebel
+
+Mail   : KiranReddyRebel At Gmail Dot Com
 
 
 # CDAC Big Data Course Project (2019)
