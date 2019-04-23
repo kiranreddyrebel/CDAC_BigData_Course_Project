@@ -1,3 +1,7 @@
+# Author : U. Kiran vas Reddy
+# FB     : https://www.facebook.com/kiranreddyrebel
+# Mail   : KiranReddyRebel At Gmail Dot Com
+
 # CDAC Big Data Course Project (2019)
 Project on Disease Prediction based on Symptoms by U.Kiran vas Reddy
 
