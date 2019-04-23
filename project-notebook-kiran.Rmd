@@ -1,0 +1,135 @@
+---
+author: ""
+output: html_document
+---
+![](cdac.png) 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+***
+
+### Name:        U.Kiran vas Reddy 
+### PRN number:  181271091022
+### Course:      Big Data Analytics
+***
+# **Disease Prediction based on Symptoms**
+***
+***
+**Set workind Directory**
+```{r}
+setwd("C:/Users/DonReddy/Desktop/")
+```
+
+
+**Load Libraries**
+```{r message=FALSE}
+
+#library(treemap)
+library(data.tree)
+library(e1071)
+library(SnowballC)
+library(wordcloud)
+library(tm)
+library(RColorBrewer)
+
+```
+
+
+**Load CSV data**
+```{r message=FALSE}
+data <- read.csv("final_disease.csv")
+```
+
+**check variables**
+```{r}
+str(data)
+
+```
+
+
+**First few rows of Dataframe**
+```{r}
+head(data, 10)
+```
+
+
+**Check if I have any nulls present or not**
+```{r}
+apply(is.na(data),2,sum)
+
+```
+
+
+**How many Symptoms for per Disease ?**
+
+```{r}
+d <- data.frame(table(data[,c('Disease')]))
+names(d)<- c('Disease', 'Count_Symptoms')
+d
+```
+
+**And What are those Symptoms for particular Disease (Tree graph)?**
+
+```{r}
+treedata <- data[c(1:50),]   ### showing only 50
+treedata$pathString <- paste("Diseases", treedata$Disease, treedata$Symptoms, sep = "/")
+
+Diseasetree <- as.Node(treedata)
+print(Diseasetree)
+
+```
+
+
+**Word Cloud plot on Diseases**
+
+
+```{r message=FALSE}
+diseases.Corpus<-Corpus(VectorSource(data$Disease))
+diseases.Clean<-tm_map(diseases.Corpus,tolower)
+diseases.Clean<-tm_map(diseases.Clean,removeNumbers)
+diseases.Clean<-tm_map(diseases.Clean,removeWords,stopwords("english"))
+diseases.Clean<-tm_map(diseases.Clean,removePunctuation)
+diseases.Clean<-tm_map(diseases.Clean,stripWhitespace)
+diseases.Clean<-tm_map(diseases.Clean,stemDocument)
+wordcloud(words = diseases.Clean, min.freq = 1, max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+
+```
+
+**Word Cloud plot on Symptoms**
+
+
+```{r message=FALSE}
+symptom.Corpus<-Corpus(VectorSource(data$Symptoms))
+symptom.Clean<-tm_map(symptom.Corpus,tolower)
+symptom.Clean<-tm_map(symptom.Clean,removeNumbers)
+symptom.Clean<-tm_map(symptom.Clean,removeWords,stopwords("english"))
+symptom.Clean<-tm_map(symptom.Clean,removePunctuation)
+symptom.Clean<-tm_map(symptom.Clean,stripWhitespace)
+symptom.Clean<-tm_map(symptom.Clean,stemDocument)
+wordcloud(words = symptom.Clean, min.freq = 1, max.words=100, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+
+```
+
+***
+
+**Now, as we have seen all the insights. Let us make it auto predict based on Symptoms.**
+
+**_Naive Bayes Algorithm_ applied to Predict Disease for input Symptom**
+
+```{r}
+predict_disease <- naiveBayes(Disease~Symptoms, data=data, method="class")
+
+```
+**Input Symptom to Predict Disease**
+
+```{r}
+symptomToPredict<-data.frame(Symptoms="pleuritic pain")
+
+showresult <- predict(predict_disease, symptomToPredict, type="class")
+
+showresult
+```
+
+
+
+## We can confirm the predicted value by inputting the same symptom in Knowledge Data App (Shiny) created by U.Kiran vas Reddy
